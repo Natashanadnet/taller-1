@@ -61,4 +61,9 @@ public class PrestamoService {
 
     }
 
+    public List<Libros> obtenerLibrosPorUsuario(String documento) {
+        Usuarios usuario = this.ds.buscarUsuario(documento);
+        return usuario.getLibrosPrestados();
+    }
+
 }
