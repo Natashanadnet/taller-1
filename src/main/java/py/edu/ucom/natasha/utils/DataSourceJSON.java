@@ -13,7 +13,10 @@ import py.edu.ucom.natasha.entities.Moneda;
 
 @ApplicationScoped
 public class DataSourceJSON {
-    public String SRC_MONEDAS = "C:\\Users\\Jhony\\Desktop\\taller-1\\src\\main\\java\\py\\edu\\ucom\\utils\\monedas.json";
+    public String SRC_MONEDAS = "C:\\Users\\n" + //
+            "atas\\OneDrive\\Documents\\Ucom Laptop\\2023\\java 2\\clase 1\\taller-1\\src\\main\\java\\py\\edu\\ucom\\n"
+            + //
+            "atasha\\utils\\monedas.json";
 
     public List<Moneda> obtenerMonedas() {
         ObjectMapper mapper = new ObjectMapper();
