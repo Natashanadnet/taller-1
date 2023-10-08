@@ -1,6 +1,7 @@
 package py.edu.ucom.natasha.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +79,25 @@ public class ListasYMapsResource {
 
         return contadorPalabras;
 
+    }
+
+    @GET
+    @Path("ejercicio-2")
+    public List<Integer> numerosUnicos() {
+        List<Integer> numerosPrueba = new ArrayList<>(Arrays.asList(1, 5, 5, 5, 6, 7, 8, 9, 9, 9, 4));
+        Map<Integer, Integer> mapadeNumeros = new HashMap<>();
+        List<Integer> resultado = new ArrayList<>();
+
+        for (Integer numero : numerosPrueba) {
+            mapadeNumeros.put(numero, mapadeNumeros.getOrDefault(numero, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entrada : mapadeNumeros.entrySet()) {
+            if (entrada.getValue() == 1) {
+                resultado.add(entrada.getKey());
+            }
+        }
+        return resultado;
     }
 
 }
