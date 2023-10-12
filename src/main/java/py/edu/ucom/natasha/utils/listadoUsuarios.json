@@ -1,10 +1,1 @@
-[
-      {
-         "documento":"7654321",
-         "nombre":"Carlos Soto"
-      },
-      {
-         "documento":"8654321",
-         "nombre":"Lorena Ruiz"
-      }
- ]
+[{"documento":"7654321","nombre":"Carlos Soto"},{"documento":"8654321","nombre":"Lorena Ruiz"},{"documento":"77777","nombre":"Geralt of Rivia"}]

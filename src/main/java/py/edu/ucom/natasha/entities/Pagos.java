@@ -2,33 +2,39 @@ package py.edu.ucom.natasha.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 public class Pagos {
     private static int codigoUnico = 1;
-    private int codigoCompra;
-    private Clientes cliente;
+    private int codPago;
+    private String codCliente;
     private LocalDateTime fecha;
     private double monto;
-    private DetalleCompra detalle;
-    private Empleados empleado;
+    private int codDetalle;
+    private String codEmpleado;
 
     public Pagos(Clientes cliente, DetalleCompra detalle, Empleados empleado) {
-        this.codigoCompra = codigoUnico;
+        this.codPago = codigoUnico;
         codigoUnico++;
-        this.cliente = cliente;
+        this.codCliente = cliente.getDocumento();
         this.fecha = LocalDateTime.now();
-        this.detalle = detalle;
+        this.codDetalle = detalle.getCodigo();
         this.monto = detalle.getTotal();
-        this.empleado = empleado;
+        this.codEmpleado = empleado.getDocumento();
     }
 
-    public int getCodigo() {
-        return codigoCompra;
+    public int getCodPago() {
+        return codPago;
     }
 
-    public Clientes getCliente() {
-        return cliente;
+    public String getCodCliente() {
+        return codCliente;
     }
 
+    @JsonProperty("fechayHora")
+    @JsonSerialize(using = ToStringSerializer.class)
     public LocalDateTime getFechayHora() {
         return fecha;
     }
@@ -37,12 +43,12 @@ public class Pagos {
         return monto;
     }
 
-    public DetalleCompra getDetalle() {
-        return detalle;
+    public int getCodDetalle() {
+        return codDetalle;
     }
 
-    public Empleados getEmpleado() {
-        return empleado;
+    public String getCodEmpleado() {
+        return codEmpleado;
     }
 
 }
