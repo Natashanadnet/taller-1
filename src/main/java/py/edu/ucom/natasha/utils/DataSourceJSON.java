@@ -100,10 +100,10 @@ public class DataSourceJSON {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            System.out.println("Error al leer el archivo JSON: " + e.getMessage());
         }
 
         return pagos;
-
     }
 
     public void guardarPagos(Pagos pago) {
