@@ -4,6 +4,9 @@ package py.edu.ucom.natasha.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

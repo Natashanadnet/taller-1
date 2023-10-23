@@ -15,6 +15,7 @@ public class MetodoPagoService implements IDAO<MetodoPago, Integer> {
 
     @Override
     public MetodoPago obtener(Integer param) {
+        // MetodoPago m = new MetodoPago(1, "TEST", "TEST");
         return this.repository.findById(param).orElse(null);
     }
 

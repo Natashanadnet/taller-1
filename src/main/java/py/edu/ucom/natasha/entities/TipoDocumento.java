@@ -3,6 +3,9 @@ package py.edu.ucom.natasha.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,6 +46,7 @@ public class TipoDocumento implements Serializable {
     @Basic(optional = false)
     @Column(name = "descripcion")
     private String descripcion;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoDocumentoId")
     private List<Cliente> clienteList;
 

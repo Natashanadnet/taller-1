@@ -3,6 +3,9 @@ package py.edu.ucom.natasha.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,6 +54,7 @@ public class Producto implements Serializable {
     @Basic(optional = false)
     @Column(name = "precio_unitario")
     private int precioUnitario;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productoId")
     private List<VentaDetalle> ventaDetalleList;
 

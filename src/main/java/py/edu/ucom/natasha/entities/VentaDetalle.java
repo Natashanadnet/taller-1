@@ -2,6 +2,9 @@
 package py.edu.ucom.natasha.entities;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +47,7 @@ public class VentaDetalle implements Serializable {
     @JoinColumn(name = "producto_id", referencedColumnName = "producto_id")
     @ManyToOne(optional = false)
     private Producto productoId;
+    @JsonIgnore
     @JoinColumn(name = "venta_id", referencedColumnName = "venta_id")
     @ManyToOne(optional = false)
     private Venta ventaId;
