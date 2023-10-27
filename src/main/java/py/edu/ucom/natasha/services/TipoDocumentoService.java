@@ -5,28 +5,27 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import py.edu.ucom.natasha.config.IDAO;
-import py.edu.ucom.natasha.entities.Cliente;
 import py.edu.ucom.natasha.entities.TipoDocumento;
-import py.edu.ucom.natasha.repositories.ClienteRepository;
 import py.edu.ucom.natasha.repositories.TipoDocumentoRepository;
 
 @ApplicationScoped
-public class ClienteService implements IDAO<Cliente, Integer> {
+public class TipoDocumentoService implements IDAO<TipoDocumento, Integer> {
+
     @Inject
-    private ClienteRepository repository;
+    private TipoDocumentoRepository repository;
 
     @Override
-    public Cliente obtener(Integer param) {
+    public TipoDocumento obtener(Integer param) {
         return this.repository.findById(param).orElse(null);
     }
 
     @Override
-    public Cliente agregar(Cliente param) {
+    public TipoDocumento agregar(TipoDocumento param) {
         return this.repository.save(param);
     }
 
     @Override
-    public Cliente modificar(Cliente param) {
+    public TipoDocumento modificar(TipoDocumento param) {
         return this.repository.save(param);
     }
 
@@ -36,7 +35,7 @@ public class ClienteService implements IDAO<Cliente, Integer> {
     }
 
     @Override
-    public List<Cliente> listar() {
+    public List<TipoDocumento> listar() {
         return this.repository.findAll();
     }
 
