@@ -2,8 +2,6 @@ package py.edu.ucom.natasha.controllers;
 
 import java.util.List;
 
-import javax.xml.crypto.Data;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -12,7 +10,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.ResponseBuilder;
 import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.entities.MetodoPago;
 import py.edu.ucom.natasha.entities.params.ObtenerDatosError;
@@ -76,13 +73,14 @@ public class MetodoPagoResource {
         return Response.ok(entity).build();
     }
 
-    @GET
-    @Path("/paginado/{pagina}/{cantidad}")
-    public Response paginado(@PathParam("pagina") Integer pagina, @PathParam("cantidad") Integer cantidad)
-            throws Exception {
-        Long entity = this.service.sumIds();
+    // @GET
+    // @Path("/paginado/{pagina}/{cantidad}")
+    // public Response paginado(@PathParam("pagina") Integer pagina,
+    // @PathParam("cantidad") Integer cantidad)
+    // throws Exception {
+    // Long entity = this.service.sumIds();
 
-        return Response.ok(entity).build();
-    }
+    // return Response.ok(entity).build();
+    // }
 
 }

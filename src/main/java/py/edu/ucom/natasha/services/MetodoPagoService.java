@@ -1,30 +1,20 @@
 package py.edu.ucom.natasha.services;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
-import io.quarkus.logging.Log;
-import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import py.edu.ucom.natasha.config.IDAO;
-import py.edu.ucom.natasha.controllers.MetodoPagoResource;
 import py.edu.ucom.natasha.entities.MetodoPago;
 import py.edu.ucom.natasha.repositories.MetodoPagoRepository;
 
 @ApplicationScoped
 public class MetodoPagoService implements IDAO<MetodoPago, Integer> {
-    // private static final Logger Log = Logger.getLogger(MetodoPagoResource)
     @Inject
     private MetodoPagoRepository repository;
 
     @Override
     public MetodoPago obtener(Integer param) {
-        // MetodoPago m = new MetodoPago(1, "TEST", "TEST");
         return this.repository.findById(param).orElse(null);
     }
 

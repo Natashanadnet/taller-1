@@ -3,40 +3,39 @@ package py.edu.ucom.natasha.services;
 import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import py.edu.ucom.natasha.config.IDAO;
 import py.edu.ucom.natasha.entities.Cliente;
+import py.edu.ucom.natasha.repositories.ClienteRepository;
 
 @ApplicationScoped
 public class ClienteService implements IDAO<Cliente, Integer> {
+    @Inject
+    private ClienteRepository repository;
 
     @Override
     public Cliente obtener(Integer param) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtener'");
+        return this.repository.findById(param).orElse(null);
     }
 
     @Override
     public Cliente agregar(Cliente param) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'agregar'");
+        return this.repository.save(param);
     }
 
     @Override
     public Cliente modificar(Cliente param) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modificar'");
+        return this.repository.save(param);
     }
 
     @Override
     public void eliminar(Integer param) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminar'");
+        this.repository.deleteById(param);
     }
 
     @Override
     public List<Cliente> listar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listar'");
+        return this.repository.findAll();
     }
 
 }
