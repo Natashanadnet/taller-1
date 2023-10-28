@@ -128,37 +128,4 @@ public class VentaResource {
         return Response.status(Response.Status.OK).entity(Globales.CRUD.CREADO_OK).build();
     }
 
-    @POST
-    @Path("/agregar/detalle/{ventaId}/{productoId}/{cantidad}")
-    public Response crearDetalle(@PathParam("ventaId") Integer ventaId,
-            @PathParam("productoId") Integer productoId, @PathParam("cantidad") Integer cantidad) {
-        Venta venta = this.service.obtener(ventaId);
-        Producto producto = this.produService.obtener(productoId);
-
-        if (venta == null || producto == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity(Globales.CRUD.CREADO_ERR).build();
-        }
-
-        if (!this.produService.restarStock(cantidad, producto)) {
-            return Response.status(Response.Status.NOT_FOUND).entity("El producto no se encuentra disponible").build();
-        }
-
-        VentaDetalle detalle = this.detalleService.crearVentaDetalle(venta, producto, cantidad);
-
-        if (detalle == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity(Globales.CRUD.CREADO_ERR).build();
-        }
-
-        // Se modifica el total de la venta:
-        int total = 0;
-        List<VentaDetalle> lista = venta.getVentaDetalleList();
-        for (VentaDetalle item : lista) {
-            total += item.getSubtotal();
-        }
-
-        venta.setTotal(total);
-        this.service.modificar(venta);
-        return Response.status(Response.Status.OK).entity(Globales.CRUD.CREADO_OK).build();
-    }
-
 }
