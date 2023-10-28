@@ -53,9 +53,4 @@ public class MetodoPagoService implements IDAO<MetodoPago, Integer> {
         return this.repository.sumId();
     }
 
-    // public List<MetodoPago> paginado(Integer pagina, Integer cantidad) {
-    // PageRequest page = new PageR(pagina, cantidad);
-    // return this.repository.findAll(Sort.by("codigo"));
-    // }
-
 }

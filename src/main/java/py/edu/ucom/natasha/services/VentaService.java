@@ -1,13 +1,14 @@
 package py.edu.ucom.natasha.services;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import net.bytebuddy.asm.Advice.Return;
 import py.edu.ucom.natasha.config.IDAO;
 import py.edu.ucom.natasha.entities.Cliente;
+import py.edu.ucom.natasha.entities.MetodoPago;
 import py.edu.ucom.natasha.entities.Venta;
 import py.edu.ucom.natasha.entities.VentaDetalle;
 import py.edu.ucom.natasha.entities.dto.ResumenVentaDTO;
@@ -62,6 +63,17 @@ public class VentaService implements IDAO<Venta, Integer> {
         data.setDetalle(detalle);
         return data;
 
+    }
+
+    public Venta crearVenta(Cliente cliente, MetodoPago metodoPago) {
+        Venta venta = new Venta();
+        Timestamp fecha = new Timestamp(System.currentTimeMillis());
+        int total = 0;
+        venta.setClienteId(cliente);
+        venta.setFecha(fecha);
+        venta.setMetodoPagoId(metodoPago);
+        venta.setTotal(total);
+        return this.repository.save(venta);
     }
 
 }

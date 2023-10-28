@@ -6,9 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import py.edu.ucom.natasha.config.IDAO;
 import py.edu.ucom.natasha.entities.Cliente;
-import py.edu.ucom.natasha.entities.TipoDocumento;
 import py.edu.ucom.natasha.repositories.ClienteRepository;
-import py.edu.ucom.natasha.repositories.TipoDocumentoRepository;
 
 @ApplicationScoped
 public class ClienteService implements IDAO<Cliente, Integer> {

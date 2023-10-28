@@ -3,8 +3,6 @@ package py.edu.ucom.natasha.entities.dto;
 import java.util.Date;
 import java.util.List;
 
-import py.edu.ucom.natasha.entities.VentaDetalle;
-
 public class ResumenVentaDTO {
 
     public String razonSocial;

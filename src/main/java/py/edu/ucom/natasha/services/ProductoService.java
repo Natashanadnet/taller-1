@@ -38,4 +38,26 @@ public class ProductoService implements IDAO<Producto, Integer> {
         return this.repository.findAll();
     }
 
+    public Boolean restarStock(Integer cantidad, Producto producto) {
+        int stockActual = producto.getStock();
+        if (stockActual - cantidad >= 0) {
+            producto.setStock(stockActual - cantidad);
+            this.modificar(producto);
+        }
+        return stockActual - cantidad >= 0;
+    }
+
+    public void sumarStock(Integer cantidad, Producto producto) {
+        int stockActual = producto.getStock();
+        producto.setStock(stockActual + cantidad);
+        this.modificar(producto);
+    }
+
+    public void cambiarStock(Integer cantidad, Producto producto) {
+
+        producto.setStock(cantidad);
+        this.modificar(producto);
+
+    }
+
 }
