@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.entities.Cliente;
 import py.edu.ucom.natasha.entities.TipoDocumento;
+import py.edu.ucom.natasha.entities.Venta;
 import py.edu.ucom.natasha.services.ClienteService;
 import py.edu.ucom.natasha.services.TipoDocumentoService;
 import py.edu.ucom.natasha.util.CaracteresUtil;
@@ -40,17 +41,18 @@ public class ClienteResource {
     @DELETE
     @Path("{id}")
     public Response eliminar(Integer id) {
-        try {
+        Cliente cliente = this.service.obtener(id);
+        List<Venta> ventas = cliente.getVentaList();
+        if (ventas.isEmpty()) {
             this.service.eliminar(id);
             return Response.status(Response.Status.OK)
                     .entity(Globales.CRUD.ELIMINADO_OK)
                     .build();
-        } catch (Exception e) {
-            // Manejar la excepción de persistencia
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Globales.CRUD.ELIMINADO_ERR)
-                    .build();
         }
+
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(Globales.CRUD.ELIMINADO_ERR)
+                .build();
     }
 
     @PUT
