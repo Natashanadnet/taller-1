@@ -2,6 +2,8 @@ package py.edu.ucom.natasha.controllers;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.entities.Cliente;
@@ -28,6 +31,7 @@ public class ClienteResource {
     public TipoDocumentoService docuService;
 
     @GET
+    @Operation(summary = "Listar clientes", description = "Obtener lista de todos los clientes")
     public Response listar() {
         List<Cliente> lista = this.service.listar();
         if (lista != null) {
@@ -39,6 +43,7 @@ public class ClienteResource {
     }
 
     @DELETE
+    @Operation(summary = "Eliminar cliente", description = "Elimina el cliente seleccionado si no tiene ventas")
     @Path("{id}")
     public Response eliminar(Integer id) {
         Cliente cliente = this.service.obtener(id);
@@ -56,9 +61,47 @@ public class ClienteResource {
     }
 
     @PUT
-    public Response modificar(Cliente param) {
+    @Operation(summary = "Modificar cliente", description = "Modifica el cliente seleccionado")
+    @Path("/modificar/{id}")
+    public Response modificarCliente(@PathParam("id") Integer clienteId, @QueryParam("nombre") String nombre,
+            @QueryParam("apellido") String apellido, @QueryParam("documento") String documento,
+            @QueryParam("codDocu") Integer codDocu, @QueryParam("clienteFiel") String clienteFiel) {
+        Cliente cliente = this.service.obtener(clienteId);
+
+        if (cliente == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Globales.CRUD.MODIFICADO_ERR)
+                    .build();
+        }
+
+        if (nombre != null) {
+            cliente.setNombres(CaracteresUtil.limpiarYCapitalizar(nombre));
+        }
+
+        if (apellido != null) {
+            cliente.setApellidos(CaracteresUtil.limpiarYCapitalizar(apellido));
+        }
+
+        if (documento != null) {
+            cliente.setDocumento(documento);
+        }
+
+        if (codDocu != null) {
+            TipoDocumento tipoDocu = this.docuService.obtener(codDocu);
+            if (tipoDocu == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(Globales.CRUD.MODIFICADO_ERR)
+                        .build();
+            }
+            cliente.setTipoDocumentoId(tipoDocu);
+        }
+
+        if (clienteFiel != null) {
+            cliente.setEsClienteFiel(Boolean.parseBoolean(clienteFiel));
+        }
+
         try {
-            this.service.modificar(param);
+            this.service.modificar(cliente);
             return Response.status(Response.Status.OK)
                     .entity(Globales.CRUD.MODIFICADO_OK)
                     .build();
@@ -71,6 +114,7 @@ public class ClienteResource {
     }
 
     @GET
+    @Operation(summary = "Buscar cliente", description = "Busca el cliente por su ID")
     @Path("{id}")
     public Response obtener(@PathParam("id") Integer param) {
         Cliente cliente = this.service.obtener(param);
@@ -82,6 +126,7 @@ public class ClienteResource {
     }
 
     @POST
+    @Operation(summary = "Crear cliente", description = "Agrega nuevo cliente a la base de datos")
     @Path("/agregar/{nombre}/{apellido}/{documento}/{codDocu}/{clienteFiel}")
     public Response agregarNuevoCliente(@PathParam("nombre") String nombre, @PathParam("apellido") String apellido,
             @PathParam("documento") String documento, @PathParam("codDocu") Integer codDocu,

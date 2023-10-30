@@ -2,6 +2,8 @@ package py.edu.ucom.natasha.controllers;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.entities.Cliente;
@@ -37,6 +40,7 @@ public class VentaResource {
     public VentaDetalleService detalleService;
 
     @GET
+    @Operation(summary = "Listar ventas", description = "Lista todas las ventas")
     public Response listar() {
         List<Venta> lista = this.service.listar();
         if (lista != null) {
@@ -47,6 +51,7 @@ public class VentaResource {
     }
 
     @DELETE
+    @Operation(summary = "Eliminar venta", description = "Elimina la venta seleccionada por su ID")
     @Path("{id}")
     public Response eliminar(Integer id) {
         try {
@@ -63,9 +68,27 @@ public class VentaResource {
     }
 
     @PUT
-    public Response modificar(Venta param) {
+    @Operation(summary = "Modificar venta", description = "Modifica la venta seleccionada por su ID")
+    @Path("modificar/{ventaId}")
+    public Response modificarVenta(@PathParam("ventaId") Integer ventaId,
+            @QueryParam("clienteId") Integer clienteId, @QueryParam("metodoPagoId") Integer metodoPagoId) {
+        Venta venta = this.service.obtener(ventaId);
+        if (venta == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Globales.CRUD.MODIFICADO_ERR)
+                    .build();
+        }
+
+        Cliente cliente = this.clieService.obtener(clienteId);
+        if (cliente != null) {
+            venta.setClienteId(cliente);
+        }
+        MetodoPago metpago = this.metPagoService.obtener(metodoPagoId);
+        if (metpago != null) {
+            venta.setMetodoPagoId(metpago);
+        }
         try {
-            this.service.modificar(param);
+            this.service.modificar(venta);
             return Response.status(Response.Status.OK)
                     .entity(Globales.CRUD.MODIFICADO_OK)
                     .build();
@@ -78,6 +101,7 @@ public class VentaResource {
     }
 
     @GET
+    @Operation(summary = "Obtener venta", description = "Busca la venta seleccionada por su ID")
     @Path("{id}")
     public Response obtener(@PathParam("id") Integer param) {
         Venta venta = this.service.obtener(param);
@@ -89,12 +113,14 @@ public class VentaResource {
     }
 
     @GET
+    @Operation(summary = "Obtener resumen de venta", description = "Muestra un resumen de la venta seleccionada por su ID")
     @Path("resumen/{id}")
     public ResumenVentaDTO obtenerResumen(@PathParam("id") Integer param) {
         return this.service.obtenerResumen(param);
     }
 
     @GET
+    @Operation(summary = "Listar detalles de venta", description = "Lista todos los detalles de venta relacionados a la venta seleccionada por su ID")
     @Path("listaDetalle/{id}")
     public List<VentaDetalle> listarById(Integer id) {
         Venta venta = this.service.obtener(id);
@@ -102,6 +128,7 @@ public class VentaResource {
     }
 
     @POST
+    @Operation(summary = "Crear venta", description = "Se crea una nueva venta en la base de datos")
     @Path("/agregar/venta/{clienteId}/{metodoPagoId}/{productoId}/{cantidad}")
     public Response crearVenta(@PathParam("clienteId") Integer clienteId,
             @PathParam("metodoPagoId") Integer metodoPagoId,
