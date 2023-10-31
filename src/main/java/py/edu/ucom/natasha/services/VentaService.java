@@ -6,9 +6,12 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.config.IDAO;
 import py.edu.ucom.natasha.entities.Cliente;
 import py.edu.ucom.natasha.entities.MetodoPago;
+import py.edu.ucom.natasha.entities.Producto;
 import py.edu.ucom.natasha.entities.Venta;
 import py.edu.ucom.natasha.entities.VentaDetalle;
 import py.edu.ucom.natasha.entities.dto.ResumenVentaDTO;
@@ -19,6 +22,14 @@ import py.edu.ucom.natasha.repositories.VentaRepository;
 public class VentaService implements IDAO<Venta, Integer> {
     @Inject
     public VentaRepository repository;
+    @Inject
+    public ClienteService clienteService;
+    @Inject
+    public MetodoPagoService metodoPagoService;
+    @Inject
+    public ProductoService productoService;
+    @Inject
+    public VentaDetalleService ventaDetalleService;
 
     @Override
     public Venta obtener(Integer param) {
@@ -65,15 +76,84 @@ public class VentaService implements IDAO<Venta, Integer> {
 
     }
 
-    public Venta crearVenta(Cliente cliente, MetodoPago metodoPago) {
+    public Response crearVenta(Integer clienteId, Integer metodoPagoId, Integer productoId, Integer cantidad) {
         Venta venta = new Venta();
         Timestamp fecha = new Timestamp(System.currentTimeMillis());
         int total = 0;
+        Cliente cliente = this.clienteService.obtener(clienteId);
+        MetodoPago metodoPago = this.metodoPagoService.obtener(metodoPagoId);
+        Producto producto = this.productoService.obtener(productoId);
+        if (cliente == null || metodoPago == null || producto == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Los datos ingresados no se encuentran registrados")
+                    .build();
+        }
         venta.setClienteId(cliente);
         venta.setFecha(fecha);
         venta.setMetodoPagoId(metodoPago);
         venta.setTotal(total);
-        return this.repository.save(venta);
+
+        if (!this.productoService.restarStock(cantidad, producto)) {
+            return Response.status(Response.Status.NOT_FOUND).entity("El producto no se encuentra disponible").build();
+        }
+
+        try {
+            this.agregar(venta);
+            VentaDetalle detalle = this.ventaDetalleService.crearVentaDetalle(venta, producto, cantidad);
+            venta.setTotal(detalle.getSubtotal());
+            this.modificar(venta);
+            return Response.status(Response.Status.OK)
+                    .entity(Globales.CRUD.CREADO_OK)
+                    .build();
+
+        } catch (Exception e) {
+            // Manejar la excepción de persistencia
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Globales.CRUD.CREADO_ERR)
+                    .build();
+        }
+
+    }
+
+    public Response modificarVenta(Integer ventaId, Integer clienteId, Integer metodoPagoId) {
+        Venta venta = this.obtener(ventaId);
+        if (venta == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("La venta no existe")
+                    .build();
+        }
+        if (clienteId != null) {
+            Cliente cliente = this.clienteService.obtener(clienteId);
+            if (cliente == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("El cliente no existe")
+                        .build();
+
+            }
+            venta.setClienteId(cliente);
+        }
+        if (metodoPagoId != null) {
+            MetodoPago metodoPago = this.metodoPagoService.obtener(metodoPagoId);
+            if (metodoPago == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("El metodo de pago no existe")
+                        .build();
+            }
+            venta.setMetodoPagoId(metodoPago);
+
+        }
+        try {
+            this.modificar(venta);
+            return Response.status(Response.Status.OK)
+                    .entity(Globales.CRUD.MODIFICADO_OK)
+                    .build();
+        } catch (Exception e) {
+            // Manejar la excepción de persistencia
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Globales.CRUD.MODIFICADO_ERR)
+                    .build();
+        }
+
     }
 
 }

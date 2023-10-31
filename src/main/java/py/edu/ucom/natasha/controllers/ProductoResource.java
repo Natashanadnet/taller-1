@@ -16,7 +16,6 @@ import jakarta.ws.rs.core.Response;
 import py.edu.ucom.natasha.config.Globales;
 import py.edu.ucom.natasha.entities.Producto;
 import py.edu.ucom.natasha.services.ProductoService;
-import py.edu.ucom.natasha.util.CaracteresUtil;
 
 @Path("/producto")
 public class ProductoResource {
@@ -57,34 +56,8 @@ public class ProductoResource {
     public Response modificarProducto(@PathParam("id") Integer productoId, @QueryParam("codigo") String codigo,
             @QueryParam("stock") Integer stock, @QueryParam("descripcion") String descripcion,
             @QueryParam("precioUnitario") Integer precioUnitario) {
-        Producto producto = this.service.obtener(productoId);
-        if (producto == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Globales.CRUD.MODIFICADO_ERR)
-                    .build();
-        }
-        if (codigo != null) {
-            producto.setCodigo(codigo);
-        }
-        if (stock != null && stock >= 0) {
-            producto.setStock(stock);
-        }
-        if (descripcion != null) {
-            producto.setDescripcion(descripcion);
-        }
-        if (precioUnitario != null && precioUnitario >= 0) {
-            producto.setPrecioUnitario(precioUnitario);
-        }
-        try {
-            this.service.modificar(producto);
-            return Response.status(Response.Status.OK)
-                    .entity(Globales.CRUD.MODIFICADO_OK)
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Globales.CRUD.MODIFICADO_ERR)
-                    .build();
-        }
+        return this.service.modificarProducto(productoId, codigo, stock, descripcion, precioUnitario);
+
     }
 
     @PUT
@@ -127,21 +100,7 @@ public class ProductoResource {
     @Path("/agregar/{codigo}/{stock}/{descripcion}/{precioUnitario}")
     public Response agregarProducto(@PathParam("codigo") String codigo, @PathParam("stock") Integer stock,
             @PathParam("descripcion") String descripcion, @PathParam("precioUnitario") Integer precioUnitario) {
-        Producto producto = new Producto();
-        producto.setCodigo(codigo);
-        producto.setStock(stock);
-        producto.setDescripcion(CaracteresUtil.limpiarYCapitalizar(descripcion));
-        producto.setPrecioUnitario(precioUnitario);
-        try {
-            this.service.agregar(producto);
-            return Response.status(Response.Status.OK)
-                    .entity(Globales.CRUD.CREADO_OK)
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Globales.CRUD.CREADO_ERR)
-                    .build();
-        }
+        return this.service.nuevoProducto(codigo, stock, descripcion, precioUnitario);
 
     }
 
